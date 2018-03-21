@@ -1,0 +1,84 @@
+﻿
+text <liste> [super_liste/
+	arian
+	babar
+	comédie
+	daniel
+	emma
+	froufrou
+	george
+	hockey
+	ici
+	jojo
+	kola
+	lolo
+	momo
+	nono
+	orélie
+	poupou
+	quotient
+	rolaid
+	stomp
+	toustous
+	uzuzu
+	volant
+	wozo
+	xoxo
+	yoyo
+	zozo
+	André
+	Balthazar
+	Camille
+	Denis
+	Emanuelle
+	Francine
+	Gaspar
+	Hector
+	Irène
+	Joanne
+	Klaus
+	Léandre
+	Mathieu
+	Nathalie
+	Ophélie
+	Pierre
+	Quentin
+	Roland
+	Stéphanie
+	Thomas
+	Ugo
+	Violette
+	Walther
+	Xavier
+	Yvette
+	Zoé
+/super_liste]
+
+macro <rara> <
+	text <nom>
+	text [zo]
+	=[zo] 0, nom, 1
+
+	text <(nom2)>
+	
+	integer [i]
+	find[i] liste, zo
+
+	integer [u]
+	find[u] i, liste, "\n"
+
+	=<(nom2)> i, liste, u
+	
+/>
+
+text <nom>
+
+=1|loop<
+
+	input <nom> "Quel est ton nom? "
+
+	rara [nom] nom nom
+
+	print "Ahhh, bonjour, ", nom, " !!\n"
+
+=2|/>
