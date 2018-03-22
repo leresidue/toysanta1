@@ -200,6 +200,37 @@ public:
 
 };
 
+class cgame {
+protected:
+	size_t		scsz;
+public:
+	toyCONTEXT	*ctx;
+	int			it;
+	size_t		csz;
+	std::wstring	*cis = nullptr;
+	double			*cid = nullptr;
+	int64_t			*cip = nullptr;
+	cgame(toyCONTEXT *pctx, int pti, size_t pcsz);
+	tsbtype identify();
+	bool domore();
+	std::wstring *getstring();
+};
+
+class funcGAME : public toyFUNC {
+public:
+	funcGAME(const wchar_t *pna = L"");
+	int func(toyCONTEXT *ctx, int it, size_t csz);
+	virtual void withSTR(cgame *game);
+	virtual void withDEC(cgame *game);
+	virtual void withNUM(cgame *game);
+};
+
+class COUNTtoy : public funcGAME {
+public:
+	COUNTtoy();
+	void withNUM(cgame *game);
+};
+
 class PRINTtoy : public toyFUNC {
 public:
 	PRINTtoy();
@@ -220,6 +251,10 @@ public:
 
 class FINDtoy : public toyFUNC {
 public:
+	enum {
+		f_find,
+		f_count,
+	} action = f_find;
 	FINDtoy(const wchar_t *pna = L"find");
 	int func(toyCONTEXT *ctx, int it, size_t csz);
 };

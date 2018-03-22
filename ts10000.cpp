@@ -655,7 +655,100 @@ tsbcode toyCONTEXT::allocanonstr(std::wstring src) {
 	return invalidtsb;
 }
 
+////////////////////////////////////////////
 
+cgame::cgame(toyCONTEXT *pctx, int pti, size_t pcsz) {
+	ctx = pctx; it = pti; csz = pcsz;
+	scsz = csz;
+}
+
+tsbtype cgame::identify() {
+	it++;
+	csz--;
+	uint32_t	msg, bco;
+	msg = ctx->code[it] & tsbcmsg;
+	bco = ctx->code[it] &~tsbcmsg;
+	msg >>= 32UL-4UL;
+
+	it++;
+	csz--;
+
+	if(msg == ts_cash) {
+		cip = ctx->getdollar();
+		return ts_num;
+	} else if(msg == ts_num || msg == ts_pnum) {
+		cip = ctx->findnum(ctx->code[it-1], (tsbtype)msg);
+		return ts_num;
+	} else if(msg == ts_dec || msg == ts_pdec) {
+		cid = ctx->finddec(ctx->code[it-1], (tsbtype)msg);
+		return ts_dec;
+	} else if(msg == ts_txt || msg == ts_ptxt) {
+		cis = ctx->findstr(ctx->code[it-1], (tsbtype)msg);
+		return ts_txt;
+	}
+	return ts_stop;
+}
+
+bool cgame::domore() {
+	if(scsz == csz) return false;
+	scsz = csz;
+	if(csz > 0) return true;
+	return false;
+}
+
+std::wstring *cgame::getstring() {
+	std::wstring *ret;
+	ret = ctx->findstr(ctx->code[it], it);
+	if(ret) {
+		it++; csz--;
+	}
+	return ret;
+}
+
+funcGAME::funcGAME(const wchar_t *pna) {
+	name = pna;
+}
+
+int funcGAME::func(toyCONTEXT *ctx, int it, size_t csz) {
+	cgame		game(ctx, it, csz);
+	switch(game.identify()) {
+	case ts_txt: this->withSTR(&game); break;
+	case ts_dec: this->withDEC(&game); break;
+	case ts_num: this->withNUM(&game); break;
+	}
+	return __LINE__;
+
+}
+
+void funcGAME::withSTR(cgame *game) {
+
+}
+
+void funcGAME::withDEC(cgame *game) {
+
+}
+
+void funcGAME::withNUM(cgame *game) {
+
+}
+
+//////
+
+COUNTtoy::COUNTtoy():funcGAME(L"count") {
+
+}
+
+void COUNTtoy::withNUM(cgame *game) {
+	while(game->domore()) {
+		std::wstring	*str;
+		str = game->getstring();
+		if(str) {
+			*game->cip = str->size();
+			return;
+		}
+	}
+	*game->cip = 0;
+}
 
 PRINTtoy::PRINTtoy() {
 	name = L"print";
@@ -693,6 +786,9 @@ int PRINTtoy::func(toyCONTEXT *ctx, int it, size_t csz) {
 
 FINDtoy::FINDtoy(const wchar_t *pna) {
 	name = pna;
+	if(name == L"count") {
+		action = f_count;
+	}
 }
 
 int FINDtoy::func(toyCONTEXT *ctx, int it, size_t csz) {
@@ -782,7 +878,7 @@ int FINDtoy::func(toyCONTEXT *ctx, int it, size_t csz) {
 			conv = nullptr;
 		}
 	}
-	if(*d64) {
+	if(d64) {
 		*d64 = -1;
 	}
 	if(oksese && oksese2) {
@@ -798,7 +894,11 @@ int FINDtoy::func(toyCONTEXT *ctx, int it, size_t csz) {
 		}
 		if(ieie && sese2->size()==1) {
 			if(d64) {
-				*d64 = sese->find(sese2[0], *ieie);
+				size_t	rt;
+				rt = sese->find(sese2[0], *ieie);
+				if(rt != std::wstring::npos) {
+					*d64 = rt;
+				}
 			}
 		}
 	}
@@ -1485,6 +1585,7 @@ toyMACHINE::toyMACHINE() {
 	(*func).push_back(new INPUTtoy());
 	(*func).push_back(new CONVERTtoy());
 	(*func).push_back(new TEXTtoy());
+	(*func).push_back(new COUNTtoy());
 	(*func).push_back(new INTEGERtoy());
 	(*func).push_back(new INTEGERtoy(L"decimal"));
 	(*func).push_back(new FINDtoy());
@@ -1536,7 +1637,7 @@ void toyMACHINE::do_txt_convert(std::wstring src) {
 			if(iswspace(src[i])) i++;
 
 			if(src[i] == L'-') {
-				invert = !invert;
+				invert = true;
 			} else
 		case 1:
 			if(iswdigit(src[i])) {
@@ -2165,7 +2266,7 @@ int IFcode::code(toyMACHINE *mac, int it, size_t csz) {
 				return mac->execcode(i+1, csz-((i-it)+1));
 			}
 		}
-	} else if (*cond) {
+	} else if (cond) {
 		*cond = 1;
 	}
 	return 0;
