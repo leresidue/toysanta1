@@ -1,0 +1,46 @@
+﻿@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@	tolower
+@@	example:
+@@
+@@	tolower[var] str "QWERTY"
+@@
+
+macro <tolower> <
+	text <str>
+	text <(ret)>
+
+	text <petit> "abcdefghijklmnopqrstuvwxyz"
+	text <grand> "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+	text <lo>
+	text [char1]
+	text [char2]
+
+	integer [i]
+	integer [u]
+	integer [o]
+	integer [start] 0
+	integer [stop]
+
+	count[i] str
+	loop[i][
+		=[stop]start
+		+[stop]1
+		
+		=[char1] start, str, stop
+		find[u] grand, char1
+		
+		=u|== -1|if[
+			+[lo] char1
+		/]|if[
+			=[o]u
+			+[o]1
+			=[char1] u, petit, o
+			+[lo] char1
+		/]
+		
+		=[start]stop
+	/]
+	=<(ret)>lo
+/>
+
