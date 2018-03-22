@@ -51,15 +51,18 @@ int main()
 	while(getline(wcin, toy)) {
 		int	err = tm.make(toy, &mac);
 		if(err < 0 && err != -8) {
-			if(err == -3) {
-				for(int i = 0; i < tm.code_subs.size(); i++) {
-					wcout << L"    ";
-				}
+			if(err == -3 || err == -2) {
+				
 			} else {
 				wcout << err << L"\n";
 			}
 		} else {
 			tm.target->execline(err);
+		}
+		if(err == -8 || err == -3 || err == -2) {
+			for(int i = 0; i < tm.code_subs.size(); i++) {
+				wcout << L"    ";
+			}
 		}
 	}
 
