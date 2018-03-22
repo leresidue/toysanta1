@@ -1,71 +1,71 @@
-﻿
+
 text <author> [
-	
-	Copyright (c) 2018 Frédérique Brisson-Lambert
-	
+    
+    Copyright (c) 2018 Frédérique Brisson-Lambert
+    
 /]
 
 text <license> "This file (test2b.toy) is licensed to you by...\n", author [MIT-OPENSOURCE-STYLE/
-	
-	Permission is hereby granted, free of charge, to any person obtaining a copy
-	of this software and associated documentation files (the "Software"), to deal
-	in the Software without restriction, including without limitation the rights
-	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	copies of the Software, and to permit persons to whom the Software is
-	furnished to do so, subject to the following conditions:
+    
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
 
-	The above copyright notice and this permission notice shall be included in all
-	copies or substantial portions of the Software.
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
 
-	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-	SOFTWARE.
-	
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+    
 /MIT-OPENSOURCE-STYLE]
 
 text <laskEN> "Do you accept the license? "
 text <laskFR> " Acceptez-vous la licence? "
 
-text <question>	"Quel est ton nom, toi? "
-text <answer>	"Donc, bonjour, "
-text <hi>		"coucou "
+text <question> "Quel est ton nom, toi? "
+text <answer>   "Donc, bonjour, "
+text <hi>       "coucou "
 
-text [bye]		"Bye "
-text [byeFR]	" Au Revoir! "
+text [bye]      "Bye "
+text [byeFR]    " Au Revoir! "
 
 macro [ask1] <
-	text [name]
-	input [name] question
-	print answer, name, " :-) "
+    text [name]
+    input [name] question
+    print answer, name, " :-) "
 
-	integer <tempo>
-	TICKCOUNT[tempo]|+[tempo]2600
-	integer<temps>666|integer<a>|TICKCOUNT[a]|+[a]temps
-	   =1|loop[|TICKCOUNT|>a|if[|TICKCOUNT[a]|+[a]temps
-			print "!"
-	/]|TICKCOUNT|>tempo|if[
-			print hi, name
-	TICKCOUNT[tempo]|+[tempo]2600
-	/]|=2|/]
+    integer <tempo>
+    TICKCOUNT[tempo]|+[tempo]2600
+    integer<temps>666|integer<a>|TICKCOUNT[a]|+[a]temps
+       =1|loop[|TICKCOUNT|>a|if[|TICKCOUNT[a]|+[a]temps
+            print "!"
+    /]|TICKCOUNT|>tempo|if[
+            print hi, name
+    TICKCOUNT[tempo]|+[tempo]2600
+    /]|=2|/]
 />
 
 print license
 
 text <qs>
 input <qs> laskEN, "/", laskFR
-integer [zo]	0
+integer [zo]    0
 
-==[qs] "y"		|if[|+[zo]1|/]
-==[qs] "yes"	|if[|+[zo]1|/]
-==[qs] "o"		|if[|+[zo]1|/]
-==[qs] "oui"	|if[|+[zo]1|/]
+==[qs] "y"      |if[|+[zo]1|/]
+==[qs] "yes"    |if[|+[zo]1|/]
+==[qs] "o"      |if[|+[zo]1|/]
+==[qs] "oui"    |if[|+[zo]1|/]
 
 =zo|if [
-	ask1
+    ask1
 /]| if [
-	print bye, "," byeFR
+    print bye, "," byeFR
 ]
