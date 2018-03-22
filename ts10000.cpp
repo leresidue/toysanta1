@@ -1837,7 +1837,7 @@ bool toyMACHINE::acceptfuncchar(std::wstring src, int pos, int sz) {
 			}
 		//}
 	}
-	if(src[pos] == L'"')
+	if(src[pos] == L'"' || src[pos] == L'-')
 		return false;
 	return true;
 }
