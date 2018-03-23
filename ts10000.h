@@ -142,7 +142,7 @@ public:
 	toyPAIR	*next = nullptr;
 	tsbcode	okc = invalidtsb;
 	toyHEAP	*othp = 0;
-	
+	int			code_position;
 	toyIMMEDIAT	*ti = nullptr;
 
 };

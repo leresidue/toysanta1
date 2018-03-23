@@ -313,22 +313,39 @@ bool toyCONTEXT::test_ok_exec(tsbcode okc, toyHEAP *opth, int it) {
 		fnd = fnd->next;
 	}
 	if(fnd && fnd->ti) {
-		if(it > fnd->ti->code_position) {
-			if(pfnd) {
-				pfnd->next = fnd->next;
-			} else {
-				imme = fnd->next;
+		toyIMMEDIAT	*pti = nullptr, *ti;
+		ti = fnd->ti;
+		while(ti) {
+			if(ti->code_position < it) {
+				break;
 			}
-			fnd->next = nullptr;
-			fnd->ti->branchthrough(this);
-			toyIMMEDIAT	*ti2;
-			while(fnd->ti) {
-				ti2 = fnd->ti->prev;
-				delete fnd->ti;
-				fnd->ti = ti2;
+			pti = ti;
+			ti = ti->prev;
+		}
+		if(ti) {
+			if(pti) pti->prev = nullptr;
+			fnd->ti = pti;
+			pti = ti;
+			if(it > ti->code_position) {
+				if(fnd->ti == ti) {
+					if(pfnd) {
+						pfnd->next = fnd->next;
+					} else {
+						imme = fnd->next;
+					}
+				}
+				//fnd->next = nullptr;
+				ti->branchthrough(this);
+				toyIMMEDIAT	*ti2;
+				while(ti) {
+					ti2 = ti->prev;
+					delete ti;
+					ti = ti2;
+				}
+				if(fnd->ti == pti)
+					delete fnd;
+				return true;
 			}
-			delete fnd;
-			return true;
 		}
 	} else {
 		toyPAIR		*pimme = imme;
@@ -2033,6 +2050,7 @@ bool toyMACHINE::ok_wait_exec(toyFUNC *fn, int cpo) {
 							fnd = new toyPAIR();
 							fnd->okc = tbc;
 							fnd->othp = ti->parent;
+							fnd->code_position = cpo;
 							fnd->ti = ti;
 							fnd->next = context.imme;
 							context.imme = fnd;
@@ -2362,6 +2380,7 @@ int toyMAKER::make2(std::wstring toy, toyMACHINE *mac) {
 				}
 			}
 			heaps.pop_back();
+			err = -2;
 		}
 	} else if(err == -6) {
 		if(target->metarget) {
@@ -2378,7 +2397,7 @@ int toyMAKER::make2(std::wstring toy, toyMACHINE *mac) {
 		exec_pos = mac->context.code.size();
 		err = exec_pos;
 	}
-	if(code_subs.size()>0) return -3;
+	if(code_subs.size()>0||heaps.size()>0) return -3;
 	if(err >= 0) return err;
 	if(err == -6) return -1;
 	return -__LINE__;
