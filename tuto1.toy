@@ -1,0 +1,45 @@
+﻿text <phrase> "ceci est loi, respectez moi loi, loi, ici la loi!"
+
+text <petit> "abcdefghijklmnopqrstuvwxyz"
+text <grand> "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+text <CESAR_CYPHER> "NOPQRSTUVWXYZABCDEFGHIJKLM"
+text <petit_cesar> "nopqrstuvwxyzabcdefghijklm"
+
+macro <bazou> <
+	text <entre>
+	text <(sortie)>
+	
+	text <petit>
+	text <grand>
+	
+	integer [nombre_de_lettres]
+	count [nombre_de_lettres] entre
+
+	integer [bonjour]
+	integer [bonsoir]
+	text [qui_suis_je]
+	
+	integer [chercher]
+	integer [trouver]
+	text [contenir]
+	
+	loop [nombre_de_lettres] [
+		=[bonsoir]bonjour
+		+[bonsoir]1
+		=[qui_suis_je] bonjour, entre, bonsoir
+		find[chercher] petit, qui_suis_je
+		=chercher|==-1|if[
+			+<(sortie)>qui_suis_je
+		/]|if[
+			=[trouver]chercher
+			+[trouver]1
+			=[qui_suis_je] chercher, grand, trouver
+			+<(sortie)>qui_suis_je
+		/]
+		=[bonjour]bonsoir
+	/]
+/>
+
+
+bazou[phrase] entre phrase, petit petit, grand petit_cesar
+bazou[phrase] entre phrase, petit grand, grand CESAR_CYPHER

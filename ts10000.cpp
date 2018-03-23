@@ -1111,7 +1111,13 @@ int ASSIGNtoy::func(toyCONTEXT *ctx, int it, size_t csz) {
 		if(*poff2 == -1) {
 			*poff2 = pcut->size();
 		}
-		dstr->assign(*pcut, *poff1, (*poff2)-(*poff1));
+		int32_t ll;
+		ll = (*poff2)-(*poff1);
+		if((*poff1)+ll > pcut->size()) {
+			ll = 0;
+			*poff1 = 0;
+		}
+		dstr->assign(*pcut, *poff1, ll);
 		return -__LINE__;
 	}
 	if(d64) {
@@ -2574,7 +2580,7 @@ int MACROcode::code(toyMACHINE *mac, int it, size_t csz) {
 				}
 			}
 		}
-		if(i > it+2) {
+		if(i > it+2 && (i+1) < it+csz) {
 			if(msg == ts_pnum || msg == ts_pdec || msg == ts_ptxt) {
 				if(bco < hipo.offsets[msg]) {
 					int64_t			*ppn;
@@ -2608,9 +2614,9 @@ int MACROcode::code(toyMACHINE *mac, int it, size_t csz) {
 						}
 						break;
 					}
-					i++;
 				}
 			}
+			i++;
 		}
 	}
 	
