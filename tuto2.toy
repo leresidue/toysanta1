@@ -1,0 +1,32 @@
+﻿
+text [nom]
+text [age]
+text [sex]
+text [tel]
+text [rue]
+
+input [nom] "Quel est votre nom? "
+input [age] "Quel est votre âge? "
+input [sex] "Quel est votre genre? "
+input [tel] "Votre numéro de téléphone, je vous prie? "
+input [rue] "Où habitez-vous? "
+
+text [cmp]
+=[cmp]nom
+==[cmp]"ROBOT"|if[
+	=[cmp]age
+	==[cmp]"1000"|if[
+		=[cmp]sex
+		==[cmp]"Galactique"|if[
+			=[cmp]tel
+			==[cmp]"TELEPHONEMAISON"|if[
+				=[cmp]rue
+				==[cmp]"ETOILES"|if[
+					print "\n\nDonc, vous être une créature de l'espace!\n\n\n\n:-)"
+				/]
+			/]
+		/]
+	/]
+/]
+
+print "Je n'ai plus d'autres questions, ", nom, ". Merci pour votre participation!"
