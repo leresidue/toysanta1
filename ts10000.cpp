@@ -2386,7 +2386,7 @@ int toyMAKER::make2(std::wstring toy, toyMACHINE *mac) {
 				}
 			}
 			heaps.pop_back();
-			err = -2;
+			
 		}
 	} else if(err == -6) {
 		if(target->metarget) {
