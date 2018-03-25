@@ -132,6 +132,16 @@ toyHEAP::toyHEAP() {
 	func_offset = 0;
 	subs_offset = 0;
 }
+
+toyHEAP::~toyHEAP() {
+	for(int i = 0; i < subs.size(); i++) {
+		if(subs[i]) delete subs[i];
+	}
+	for(int i = 0; i < func.size(); i++) {
+		if(func[i]) delete func[i];
+	}
+}
+
 tsbcode toyHEAP::getcorrect(std::wstring src) {
 	int	ret;
 
@@ -160,7 +170,29 @@ tsbcode toyHEAP::getasgnpos(std::wstring src, bool known_p) {
 
 
 toyCONTEXT::toyCONTEXT() {
-	heap.push_back(new toyHEAP());
+	heap.push_back(&baseheap);
+}
+
+toyCONTEXT::~toyCONTEXT() {
+	for(int i = 0; i < isso.size(); i++) {
+		toyPAIR	*a, *b;
+		a = isso[i];
+		while(a) {
+			b = a;
+			a = a->next;
+
+			toyIMMEDIAT	*c, *d;
+			c = b->ti;
+			while(c) {
+				d = c;
+				c = c->prev;
+
+				delete d;
+			}
+
+			delete b;
+		}
+	}
 }
 
 void toyCONTEXT::codepush(tsbcode cd) {
@@ -797,8 +829,26 @@ int PRINTtoy::func(toyCONTEXT *ctx, int it, size_t csz) {
 			conv = nullptr;
 		}
 	}
-	std::wcout << rere;
+	ctx->show(rere);
+	//std::wcout << rere;
 	return __LINE__;
+}
+
+void toyCONTEXT::show(std::wstring str) {
+	if(inface) {
+		inface->show(str);
+	} else {
+		std::wcout << str;
+	}
+}
+
+void toyCONTEXT::ask(std::wstring s1, std::wstring *s2) {
+	if(inface) {
+		inface->ask(s1, s2);
+	} else {
+		std::wcout << s1;
+		std::wcin >> *s2;
+	}
 }
 
 FINDtoy::FINDtoy(const wchar_t *pna) {
@@ -1117,7 +1167,8 @@ int ASSIGNtoy::func(toyCONTEXT *ctx, int it, size_t csz) {
 			ll = 0;
 			*poff1 = 0;
 		}
-		dstr->assign(*pcut, *poff1, ll);
+		if(*poff1 >= 0)
+			dstr->assign(*pcut, *poff1, ll);
 		return -__LINE__;
 	}
 	if(d64) {
@@ -1529,8 +1580,9 @@ int INPUTtoy::func(toyCONTEXT *ctx, int it, size_t csz) {
 	}
 	if(dstr) {
 		std::wstring	dstru;
-		std::wcout << rere;
-		std::wcin >> dstru;
+		ctx->ask(rere, &dstru);
+		//std::wcout << rere;
+		//std::wcin >> dstru;
 		//std::getline(std::wcin, dstru);
 		*dstr = dstru;
 		//std::getline(std::wcin, (*dstr));
@@ -1637,6 +1689,12 @@ toyMACHINE::toyMACHINE() {
 	context.heap.back()->subs_offset = (*subs).size();
 
 	MACHINEignore = context.getsubpos(L"@");
+}
+
+toyMACHINE::~toyMACHINE() {
+	for(int i = 1; i < context.heap.size(); i++) {
+
+	}
 }
 
 void toyMACHINE::prepare() {
@@ -2043,7 +2101,7 @@ bool toyMACHINE::ok_wait_exec(toyFUNC *fn, int cpo) {
 						toyPAIR	*fnd = nullptr, *pfnd = nullptr;
 						fnd = context.imme;
 						while(fnd) {
-							if( fnd->okc == tbc && fnd->othp == thp) {
+							if( fnd->okc == tbc /*&& fnd->othp == thp*/) {
 								break;
 							}
 							pfnd = fnd;
@@ -2055,7 +2113,7 @@ bool toyMACHINE::ok_wait_exec(toyFUNC *fn, int cpo) {
 						} else {
 							fnd = new toyPAIR();
 							fnd->okc = tbc;
-							fnd->othp = ti->parent;
+							//fnd->othp = ti->parent;
 							fnd->code_position = cpo;
 							fnd->ti = ti;
 							fnd->next = context.imme;
@@ -2431,7 +2489,7 @@ int toyMAKER::make(std::wstring toy, toyMACHINE *mac) {
 		} else if(dodo_not>1) {
 			dodo_not--;
 		}
-		if(toy[i] == L'|') {
+		if(toy[i] == L'|' || toy[i] == L'\n' || toy[i] == L'\r') {
 			if(dodo_not <= 0)
 				ok_do_it = true;
 		}

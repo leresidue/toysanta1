@@ -47,6 +47,11 @@ extern class toyMACHINE;
 extern class toyCONTEXT;
 extern class toyCODE;
 
+class externTOY {
+public:
+	virtual void show(std::wstring str) = 0;
+	virtual void ask(std::wstring s1, std::wstring *s2) = 0;
+};
 
 class toyFUNC {
 public:
@@ -99,6 +104,7 @@ public:
 	int64_t	dollar;
 
 	toyHEAP();
+	~toyHEAP();
 	tsbcode getcorrect(std::wstring src);
 	tsbcode getasgnpos(std::wstring src, bool known_p = true);
 };
@@ -115,15 +121,15 @@ public:
 	void branchthrough(toyCONTEXT *ctx);
 	int	code_position;
 	toyMACHINE	*mac = nullptr;
+
 	toyPAIR		*imme;
+	/*
+		
+	*/
 };
 
 class toyCODE {
 public:
-	/*toyHEAP		*parent; int distance;
-	uint32_t	offsets[9];
-	uint32_t	func_offset;
-	uint32_t	subs_offset;*/
 	toyIMMEDIAT	immcon;
 
 	tsbcode		prudence = ts_protect;
@@ -141,7 +147,6 @@ class toyPAIR {
 public:
 	toyPAIR	*next = nullptr;
 	tsbcode	okc = invalidtsb;
-	toyHEAP	*othp = 0;
 	int			code_position;
 	toyIMMEDIAT	*ti = nullptr;
 
@@ -151,6 +156,8 @@ class toyCONTEXT {
 protected:
 	bool test_ok_exec(tsbcode okc, toyHEAP *opth, int it);
 public:
+	externTOY			*inface = nullptr;
+	toyHEAP				baseheap;
 	//std::vector<toyFUNC*>	func;
 	std::vector<toyHEAP*>	heap;
 	std::vector<tsbcode>	code;
@@ -167,7 +174,7 @@ public:
 	size_t	code_position = 0;
 
 	toyCONTEXT();
-
+	~toyCONTEXT();
 	void prepare();
 
 	int64_t *getdollar();
@@ -198,6 +205,8 @@ public:
 
 	void codepush(tsbcode cd);
 
+	void show(std::wstring str);
+	void ask(std::wstring s1, std::wstring *s2);
 };
 
 class cgame {
@@ -353,6 +362,7 @@ public:
 	std::vector<toyCODE*>	bank;
 
 	toyMACHINE();
+	~toyMACHINE();
 	void prepare();
 
 	int64_t *getdollar();
