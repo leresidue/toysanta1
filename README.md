@@ -6,3 +6,6 @@ The .toy files are code examples of the Toy (formerly ToySanta) language. They c
 
 If you can read French, the tuto1.pdf file is a tutorial about programming with the Toy language.
 Si vous savez lire le français, le fichier tuto1.pdf est un tutoriel pour apprendre à programmer en langage Toy.
+
+# The source code is under active development
+It is not yet useful for a 'general purpose' role. There's no version release yet.
