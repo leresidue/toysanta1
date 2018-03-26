@@ -189,7 +189,7 @@ public:
 	toyCODE *findsub(tsbcode cd);
 	tsbcode getsubpos(std::wstring src);
 	tsbcode getfuncpos(std::wstring src);
-	tsbcode getasgnpos(std::wstring src, bool known_p);
+	tsbcode getasgnpos(std::wstring src, bool known_p, bool auto_exec);
 
 	tsbcode allocnum(int64_t src, std::wstring vnam, tsbtype msg);
 
