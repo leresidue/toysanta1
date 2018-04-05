@@ -553,11 +553,9 @@ tsbcode toyCONTEXT::getfuncpos(std::wstring src) {
 	}
 	return invalidtsb;*/
 }
-tsbcode toyCONTEXT::getasgnpos(std::wstring src, bool known_p, bool auto_exec) {
+tsbcode toyCONTEXT::getasgnpos(std::wstring src, bool known_p) {
 	tsbcode	ret;
 	uint32_t	offsets[6] = {0,0,0,0,0,0};
-
-	
 	for(int i = heap.size(); i > 0; i--) {
 		ret = heap[i-1]->getasgnpos(src, known_p);
 		if(ret != invalidtsb) {
@@ -831,26 +829,8 @@ int PRINTtoy::func(toyCONTEXT *ctx, int it, size_t csz) {
 			conv = nullptr;
 		}
 	}
-	ctx->show(rere);
-	//std::wcout << rere;
+	std::wcout << rere;
 	return __LINE__;
-}
-
-void toyCONTEXT::show(std::wstring str) {
-	if(inface) {
-		inface->show(str);
-	} else {
-		std::wcout << str;
-	}
-}
-
-void toyCONTEXT::ask(std::wstring s1, std::wstring *s2) {
-	if(inface) {
-		inface->ask(s1, s2);
-	} else {
-		std::wcout << s1;
-		std::wcin >> *s2;
-	}
 }
 
 FINDtoy::FINDtoy(const wchar_t *pna) {
@@ -1169,8 +1149,7 @@ int ASSIGNtoy::func(toyCONTEXT *ctx, int it, size_t csz) {
 			ll = 0;
 			*poff1 = 0;
 		}
-		if(*poff1 >= 0)
-			dstr->assign(*pcut, *poff1, ll);
+		dstr->assign(*pcut, *poff1, ll);
 		return -__LINE__;
 	}
 	if(d64) {
@@ -1582,9 +1561,8 @@ int INPUTtoy::func(toyCONTEXT *ctx, int it, size_t csz) {
 	}
 	if(dstr) {
 		std::wstring	dstru;
-		ctx->ask(rere, &dstru);
-		//std::wcout << rere;
-		//std::wcin >> dstru;
+		std::wcout << rere;
+		std::wcin >> dstru;
 		//std::getline(std::wcin, dstru);
 		*dstr = dstru;
 		//std::getline(std::wcin, (*dstr));
@@ -2140,7 +2118,6 @@ int toyMACHINE::feedline(std::wstring src, std::wstring stop2, std::wstring *sto
 	toyCODE	*cd = nullptr;
 	bool	is_code = false;
 	bool	known_p = false;
-	bool	auto_exec = false;
 	std::wstring	func = getfunc(src, &pos);
 	std::wstring	asgn = getasgn(src, &pos);
 	std::wstring	parm = getparm(src, &pos);
@@ -2168,7 +2145,6 @@ int toyMACHINE::feedline(std::wstring src, std::wstring stop2, std::wstring *sto
 	} else {
 		fn = context.findtoy(funcpos);
 		if(fn) is_code = fn->is_code;
-		if(fn) auto_exec = fn->auto_exec;
 	}
 	if(funcpos != invalidtsb) {
 		if((cd)  || (fn && (is_code == false||fn->target_me == true))) {
@@ -2184,7 +2160,7 @@ int toyMACHINE::feedline(std::wstring src, std::wstring stop2, std::wstring *sto
 		tsbcode asgnpos = invalidtsb;
 		if(fn && fn->can_var) {
 			if(asgn.size()>0)
-				asgnpos = context.getasgnpos(asgn, known_p, auto_exec);
+				asgnpos = context.getasgnpos(asgn, known_p);
 			if(asgnpos != invalidtsb) {
 				context.codepush(asgnpos);
 			} else if(asgn.size()>0) {
@@ -2194,13 +2170,6 @@ int toyMACHINE::feedline(std::wstring src, std::wstring stop2, std::wstring *sto
 				context.codepush(mktsbc(0, ts_cash));
 			}
 		} else {
-			if(auto_exec) {
-				std::wstring	asgn2;
-				if(asgn.size()>2) {
-					asgn2.assign(asgn.c_str()+1, asgn.size()-2);
-					asgn = asgn2;
-				}
-			}
 			if(asgn.size()>0) asgnpos = context.resolvevar(asgn);
 			if(asgnpos == invalidtsb) asgnpos = mktsbc(0, ts_cash);
 			context.codepush(asgnpos);
@@ -2455,7 +2424,6 @@ int toyMAKER::make2(std::wstring toy, toyMACHINE *mac) {
 				}
 			}
 			heaps.pop_back();
-			
 		}
 	} else if(err == -6) {
 		if(target->metarget) {
@@ -2500,7 +2468,7 @@ int toyMAKER::make(std::wstring toy, toyMACHINE *mac) {
 		} else if(dodo_not>1) {
 			dodo_not--;
 		}
-		if(toy[i] == L'|' || toy[i] == L'\n' || toy[i] == L'\r') {
+		if(toy[i] == L'|') {
 			if(dodo_not <= 0)
 				ok_do_it = true;
 		}

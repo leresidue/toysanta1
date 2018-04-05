@@ -47,11 +47,6 @@ extern class toyMACHINE;
 extern class toyCONTEXT;
 extern class toyCODE;
 
-class externTOY {
-public:
-	virtual void show(std::wstring str) = 0;
-	virtual void ask(std::wstring s1, std::wstring *s2) = 0;
-};
 
 class toyFUNC {
 public:
@@ -156,7 +151,6 @@ class toyCONTEXT {
 protected:
 	bool test_ok_exec(tsbcode okc, toyHEAP *opth, int it);
 public:
-	externTOY			*inface = nullptr;
 	toyHEAP				baseheap;
 	//std::vector<toyFUNC*>	func;
 	std::vector<toyHEAP*>	heap;
@@ -165,7 +159,7 @@ public:
 	//std::vector<toyPAIR*>	imme;
 	//toyPAIR		*imme = nullptr;
 	std::vector<toyPAIR*>	isso;
-	toyPAIR					*imme;
+	toyPAIR					*imme = nullptr;
 	//std::vector<toyCODE*>	subs;
 
 	//uint32_t	func_offset;
@@ -189,7 +183,7 @@ public:
 	toyCODE *findsub(tsbcode cd);
 	tsbcode getsubpos(std::wstring src);
 	tsbcode getfuncpos(std::wstring src);
-	tsbcode getasgnpos(std::wstring src, bool known_p, bool auto_exec);
+	tsbcode getasgnpos(std::wstring src, bool known_p);
 
 	tsbcode allocnum(int64_t src, std::wstring vnam, tsbtype msg);
 
@@ -205,8 +199,6 @@ public:
 
 	void codepush(tsbcode cd);
 
-	void show(std::wstring str);
-	void ask(std::wstring s1, std::wstring *s2);
 };
 
 class cgame {
