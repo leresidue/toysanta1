@@ -32,7 +32,7 @@ int main()
 		wcout.imbue(std::locale(wcout.getloc(), new std::codecvt_utf8_utf16<wchar_t>));
 		wcin.imbue(std::locale(wcin.getloc(), new std::codecvt_utf8_utf16<wchar_t>));
 		while(getline(file, toy)) {
-			//wcout << toy << L"\n";
+			wcout << toy << L"\n";
 			int err = tm.make(toy, &mac);
 			if(err < -10) {
 				wcout  << err << L"\n";
