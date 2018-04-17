@@ -1076,7 +1076,16 @@ int ASSIGNtoy::func(toyCONTEXT *ctx, int it, size_t csz) {
 		if(dstr) saccu = *dstr;
 	}
 	if(action == a_tickcount){
+		#ifdef _WINDOWS_
 		iaccu = GetTickCount64();
+#elif	__unix__
+	
+		struct timespec ts;
+		clock_gettime(CLOCK_MONOTONIC, &ts);
+		iaccu = (uint64_t)(ts.tv_nsec / 1000000) + ((uint64_t)ts.tv_sec * 1000ull);
+	
+#endif
+		//iaccu = GetTickCount64();
 	}
 	int64_t		off1, off2, *poff1 = nullptr, *poff2 = nullptr;
 	off1 = 0;
