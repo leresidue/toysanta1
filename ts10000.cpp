@@ -52,7 +52,7 @@ void toyIMMEDIAT::branchthrough(toyCONTEXT *ctx) {
 		}
 	}
 	if(disto != -1) {
-		for(int i = ctx->heap.size(); i > disto; i--) {
+		for(int i = (int)ctx->heap.size(); i > disto; i--) {
 			backed.push_back(ctx->heap.back());
 			ctx->heap.pop_back();
 		}
@@ -107,7 +107,7 @@ std::wstring toyFUNC::convert(toyCONTEXT *ctx, tsbcode code, int it) {
 
 template <typename T>
 int toyVARS<T>::getpos(std::wstring src, int offset) {
-	int	ret;
+//	int	ret;
 	for(int i = offset; i > 0; i--) {
 		if(names[i-1].compare(src)==0) {
 			return i-1;
@@ -505,9 +505,9 @@ toyCODE *toyCONTEXT::findsub(tsbcode cd) {
 	return nullptr;*/
 }
 tsbcode toyCONTEXT::getsubpos(std::wstring src) {
-	tsbcode	ret;
+	//tsbcode	ret;
 	uint32_t	offset = 0, offset2 = 0;
-	for(int i = heap.size(); i > 0; i--) {
+	for(int i = (int)heap.size(); i > 0; i--) {
 		for(int u = heap[i-1]->subs_offset; u > 0; u--) {
 			if(heap[i-1]->subs[u-1]->name == src) {
 				if(i < heap.size()) {
@@ -531,10 +531,10 @@ tsbcode toyCONTEXT::getsubpos(std::wstring src) {
 	return invalidtsb;*/
 }
 tsbcode toyCONTEXT::getfuncpos(std::wstring src) {
-	tsbcode	ret;
+	//tsbcode	ret;
 	uint32_t	offset = 0, offset2 = 0;
-	for(int i = heap.size(); i > 0; i--) {
-		for(int u = heap[i-1]->func.size(); u > 0; u--) {
+	for(int i = (int)heap.size(); i > 0; i--) {
+		for(int u = (int)heap[i-1]->func.size(); u > 0; u--) {
 			if(heap[i-1]->func[u-1]->name == src) {
 				return mktsbc((u-1)+offset, tsbtype::ts_func);
 			}
@@ -556,7 +556,7 @@ tsbcode toyCONTEXT::getfuncpos(std::wstring src) {
 tsbcode toyCONTEXT::getasgnpos(std::wstring src, bool known_p) {
 	tsbcode	ret;
 	uint32_t	offsets[6] = {0,0,0,0,0,0};
-	for(int i = heap.size(); i > 0; i--) {
+	for(int i = (int)heap.size(); i > 0; i--) {
 		ret = heap[i-1]->getasgnpos(src, known_p);
 		if(ret != invalidtsb) {
 			uint32_t	msg = ret & tsbcmsg;
@@ -586,12 +586,12 @@ tsbcode toyCONTEXT::allocnum(int64_t src, std::wstring vnam, tsbtype msg) {
 			ret = mktsbc(hp->pnum.vars.size(), msg);
 			hp->pnum.names.push_back(vnam);
 			hp->pnum.vars.push_back(src);
-			hp->offsets[msg] = hp->pnum.vars.size();
+			hp->offsets[msg] = (uint32_t)hp->pnum.vars.size();
 		} else if(msg == tsbtype::ts_num) {
 			ret = mktsbc(hp->num.vars.size(), msg);
 			hp->num.names.push_back(vnam);
 			hp->num.vars.push_back(src);
-			hp->offsets[msg] = hp->num.vars.size();
+			hp->offsets[msg] = (uint32_t)hp->num.vars.size();
 		}
 	}
 	return ret;
@@ -603,13 +603,13 @@ tsbcode toyCONTEXT::alloccode(toyCODE *mc) {
 	if(heap.size()>0) {
 		toyHEAP	*hp = heap[heap.size()-1];
 		uint32_t	acsz = 0;
-		for(int i = heap.size(); i > 0; i--) {
-			acsz += heap[i-1]->subs.size();
+		for(int i = (int)heap.size(); i > 0; i--) {
+			acsz += (uint32_t)heap[i-1]->subs.size();
 		}
 		
 		ret = mktsbc(hp->subs.size(), ts_code);
 		hp->subs.push_back(mc);
-		hp->subs_offset = hp->subs.size();
+		hp->subs_offset = (uint32_t)hp->subs.size();
 		heap.push_back(&mc->sheap);
 		mc->immcon.parent = hp;
 		mc->immcon.distance = heap.size()-1;
@@ -860,8 +860,8 @@ int FINDtoy::func(toyCONTEXT *ctx, int it, size_t csz) {
 		dstr = ctx->findstr(ctx->code[it], (tsbtype)msg);
 	}
 		
-	int64_t			*t64;
-	double			*l64;
+//	int64_t			*t64;
+	//double			*l64;
 	
 	toyFUNC			*conv = nullptr;
 	int				count = 0;
@@ -1152,7 +1152,7 @@ int ASSIGNtoy::func(toyCONTEXT *ctx, int it, size_t csz) {
 		if(*poff2 == -1) {
 			*poff2 = pcut->size();
 		}
-		int32_t ll;
+		uint64_t ll;
 		ll = (*poff2)-(*poff1);
 		if((*poff1)+ll > pcut->size()) {
 			ll = 0;
@@ -2477,7 +2477,7 @@ int toyMAKER::make(std::wstring toy, toyMACHINE *mac) {
 		} else if(dodo_not>1) {
 			dodo_not--;
 		}
-		if(toy[i] == L'|') {
+		if(toy[i] == L'|' || toy[i] == L'\n' || toy[i] == L'\r') {
 			if(dodo_not <= 0)
 				ok_do_it = true;
 		}
@@ -2689,7 +2689,7 @@ int MACROcode::code(toyMACHINE *mac, int it, size_t csz) {
 		}
 	}
 	if(disto != -1) {
-		for(int i = mac->context.heap.size(); i > disto; i--) {
+		for(int i = (int)mac->context.heap.size(); i > disto; i--) {
 			backed.push_back(mac->context.heap.back());
 			mac->context.heap.pop_back();
 		}
@@ -2699,13 +2699,13 @@ int MACROcode::code(toyMACHINE *mac, int it, size_t csz) {
 	mac->context.isso.push_back(mac->context.imme);
 	mac->context.imme = immcon.imme;
 
-	for(int i = startpos+4; i < startpos+sz; i++) {
+	for(unsigned int i = startpos+4; i < startpos+sz; i++) {
 		uint32_t	msg = mac->context.code[i] & tsbcmsg;
 		uint32_t	bco = mac->context.code[i] &~tsbcmsg;
 		msg >>= 32UL-4UL;
 		if(msg == ts_stop) {
 			if(bco == 0) bco = 1;
-			mac->execcode(i, bco);
+			mac->execline(i);
 			i += bco-1;
 		}
 	}

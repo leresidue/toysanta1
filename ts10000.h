@@ -43,9 +43,9 @@ typedef uint32_t tsbcode;
 #define invalidtsb	0xffffffffUL
 #define mktsbc(x, y) (tsbcode)((((uint32_t)x)|(tsbcmsg&(((uint32_t)y)<<(32UL-4UL)))))
 
-extern class toyMACHINE;
-extern class toyCONTEXT;
-extern class toyCODE;
+class toyMACHINE;
+class toyCONTEXT;
+class toyCODE;
 
 
 class toyFUNC {
