@@ -829,7 +829,7 @@ int PRINTtoy::func(toyCONTEXT *ctx, int it, size_t csz) {
 			conv = nullptr;
 		}
 	}
-	std::wcout << rere;
+	std::wcout << rere << std::flush;
 	return __LINE__;
 }
 
