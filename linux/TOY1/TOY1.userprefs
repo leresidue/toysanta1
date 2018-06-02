@@ -1,0 +1,19 @@
+﻿<Properties StartupItem="TOY1/TOY1.cproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="TOY1/toysantalanguage1.cpp">
+    <Files>
+      <File FileName="TOY1/toysantalanguage1.cpp" Line="18" Column="4" />
+      <File FileName="TOY1/stdafx.h" Line="1" Column="1" />
+      <File FileName="TOY1/ts10000.h" Line="107" Column="42" />
+      <File FileName="TOY1/tsF0000.h" Line="1" Column="1" />
+      <File FileName="TOY1/test2b.toy" Line="1" Column="1" />
+      <File FileName="TOY1/tsF0000.cpp" Line="729" Column="8" NotebookId="1" />
+      <File FileName="TOY1/ts10000.cpp" Line="180" Column="17" NotebookId="1" />
+      <File FileName="TOY1/tsM0000.cpp" Line="1" Column="1" NotebookId="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
