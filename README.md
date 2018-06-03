@@ -9,3 +9,6 @@ Si vous savez lire le français, le fichier tuto1.pdf est un tutoriel pour appre
 
 # The source code is under active development
 It is not yet useful for a 'general purpose' role. There's no version release yet.
+
+# For linux
+The 'linux' folder has a version of the Toy language that is compilable with MonoDevelop.
