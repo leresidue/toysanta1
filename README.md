@@ -8,7 +8,7 @@ If you can read French, the tuto1.pdf file is a tutorial about programming with 
 Si vous savez lire le français, le fichier tuto1.pdf est un tutoriel pour apprendre à programmer en langage Toy.
 
 # The source code is under active development
-It is not yet useful for a 'general purpose' role. There's no version release yet.
+It is not yet useful for a 'general purpose' role. There's no version release yet. Right now, some features are under active development (pointers).
 
 # For linux
 The 'linux' folder has a version of the Toy language that is compilable with MonoDevelop.
