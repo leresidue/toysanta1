@@ -1,4 +1,10 @@
 # toysanta1
+
+This codebase is not actively maintained anymore. More to come...
+-----------------------------------------------------------------
+
+
+
 Première implémentation du langage Toy (autrefois ToySanta).
 First implementation of the Toy (formerly Toy Santa) language.
 
