@@ -1,6 +1,9 @@
 # toysanta1
 
-This codebase is not actively maintained anymore. More to come...
+STOP THE PRESS: The current codebase is not compatible with linux. I haven't yet made the change to make it compatible again. More to come soon...
+---------------
+
+This codebase was not actively maintained anymore. More to come...
 -----------------------------------------------------------------
 
 
